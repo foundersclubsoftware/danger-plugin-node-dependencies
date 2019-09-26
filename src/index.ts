@@ -20,7 +20,7 @@ function makePackageList(packages: string[]) {
     return packages.reduce((list, dep) => `${list}\n + ${dep}`, '')
 }
 
-function processDiff(diff: TextDiff | null): void {
+function checkAddedPackages(diff: TextDiff | null): void {
     if (!diff) {
         return
     }
@@ -32,15 +32,15 @@ function processDiff(diff: TextDiff | null): void {
     const addedDevPackages = getPackageAdditions(before.devDependencies, after.devDependencies)
 
     if (addedPackages.length) {
-        warn('Added dependencies: ' + makePackageList(addedPackages))
+        warn('Added dependencies:' + makePackageList(addedPackages))
     }
 
     if (addedDevPackages.length) {
-        warn('Added dev dependencies: ' + makePackageList(addedDevPackages))
+        warn('Added dev dependencies:' + makePackageList(addedDevPackages))
     }
 }
 
 if (~danger.git.modified_files.indexOf('package.json')) {
     danger.git.diffForFile('package.json')
-        .then(processDiff)
+        .then(checkAddedPackages)
 }
