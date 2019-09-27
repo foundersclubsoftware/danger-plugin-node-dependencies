@@ -1,0 +1,24 @@
+{
+  "name": "danger-dependencies",
+  "version": "0.0.1",
+  "description": "Keep dependencies as low as possible.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/foundersclubsoftware/danger-dependencies.git"
+  },
+  "author": "thrymgjol",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/foundersclubsoftware/danger-dependencies/issues"
+  },
+  "homepage": "https://github.com/foundersclubsoftware/danger-dependencies#readme",
+  "devDependencies": {
+    "danger": "^9.2.1",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {}
+}
