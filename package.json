@@ -2,9 +2,29 @@
   "name": "danger-dependencies",
   "version": "0.0.1",
   "description": "Keep dependencies as low as possible.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+      "danger",
+      "danger-plugin",
+      "dependencies"
+  ],
   "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run format",
+      "tslint --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+        "pre-commit": [ "lint-staged" ]
+    }
   },
   "repository": {
     "type": "git",
@@ -12,12 +32,19 @@
   },
   "author": "thrymgjol",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "bugs": {
     "url": "https://github.com/foundersclubsoftware/danger-dependencies/issues"
   },
   "homepage": "https://github.com/foundersclubsoftware/danger-dependencies#readme",
   "devDependencies": {
+    "@types/node": "^12.7.8",
     "danger": "^9.2.1",
+    "husky": "^3.0.5",
+    "lint-staged": "^9.4.0",
+    "prettier": "^1.18.2",
     "typescript": "^3.6.3"
   },
   "dependencies": {}
