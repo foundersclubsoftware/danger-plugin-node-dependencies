@@ -15,8 +15,10 @@ interface PackageMap {
   [key: string]: string
 }
 
-const addedPackages: string[] = []
-const addedDevPackages: string[] = []
+interface AddedPackages {
+  dependencies: string[]
+  devDependencies: string[]
+}
 
 const addedDependenciesMessage = "Added dependencies"
 const addedDevDependenciesMessage = "Added dev dependencies"
@@ -28,7 +30,7 @@ function getPackageAdditions(before: PackageMap, after: PackageMap): string[] {
   return afterPackages.filter(pkg => !beforePackages.includes(pkg))
 }
 
-function populateAddedPackages(diff: TextDiff | null): void {
+function getAddedPackages(diff: TextDiff | null): AddedPackages | undefined {
   if (!diff) {
     return
   }
@@ -36,44 +38,75 @@ function populateAddedPackages(diff: TextDiff | null): void {
   const before: PackageJSON = JSON.parse(diff.before)
   const after: PackageJSON = JSON.parse(diff.after)
 
-  addedPackages.push(
-    ...getPackageAdditions(before.dependencies, after.dependencies)
-  )
-  addedDevPackages.push(
-    ...getPackageAdditions(before.devDependencies, after.devDependencies)
-  )
-}
-
-if (danger.git.modified_files.includes("package.json")) {
-  danger.git.diffForFile("package.json").then(populateAddedPackages)
+  return {
+    dependencies: getPackageAdditions(before.dependencies, after.dependencies),
+    devDependencies: getPackageAdditions(
+      before.devDependencies,
+      after.devDependencies
+    )
+  }
 }
 
 function makePackageList(packages: string[]) {
   return packages.reduce((list, dep) => `${list}\n + ${dep}`, "")
 }
 
-function notifyAddedPackages(
-  notifyFunction: (msg: string) => void,
-  message: string,
-  packageList: string[]
-) {
-  if (packageList.length) {
-    notifyFunction(message + ":" + makePackageList(packageList))
+async function notifyAddedPackages(
+  notify: (msg: string) => void,
+  types: {
+    dependencies?: boolean
+    devDependencies?: boolean
+  }
+): Promise<void> {
+  if (!danger.git.modified_files.includes("package.json")) {
+    return
+  }
+
+  const addedPackages = await danger.git
+    .diffForFile("package.json")
+    .then(getAddedPackages)
+
+  if (!addedPackages) {
+    return
+  }
+
+  if (types.dependencies && addedPackages.dependencies.length) {
+    notify(
+      addedDependenciesMessage +
+        ":" +
+        makePackageList(addedPackages.dependencies)
+    )
+  }
+
+  if (types.devDependencies && addedPackages.devDependencies.length) {
+    notify(
+      addedDevDependenciesMessage +
+        ":" +
+        makePackageList(addedPackages.devDependencies)
+    )
   }
 }
 
 export function warnAddedDependencies() {
-  notifyAddedPackages(warn, addedDependenciesMessage, addedPackages)
+  notifyAddedPackages(warn, { dependencies: true })
 }
 
 export function failAddedDependencies() {
-  notifyAddedPackages(fail, addedDependenciesMessage, addedPackages)
+  notifyAddedPackages(fail, { dependencies: true })
 }
 
 export function warnAddedDevDependencies() {
-  notifyAddedPackages(warn, addedDevDependenciesMessage, addedDevPackages)
+  notifyAddedPackages(warn, { devDependencies: true })
 }
 
 export function failAddedDevDependencies() {
-  notifyAddedPackages(fail, addedDevDependenciesMessage, addedDevPackages)
+  notifyAddedPackages(fail, { devDependencies: true })
+}
+
+export function warnAllDependencies() {
+  notifyAddedPackages(warn, { dependencies: true, devDependencies: true })
+}
+
+export function failAllDependencies() {
+  notifyAddedPackages(fail, { dependencies: true, devDependencies: true })
 }
