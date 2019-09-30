@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
-      "danger",
-      "danger-plugin",
-      "dependencies"
+    "danger",
+    "danger-plugin",
+    "dependencies"
   ],
   "scripts": {
     "build": "tsc",
@@ -17,13 +17,15 @@
   "lint-staged": {
     "*.ts": [
       "npm run format",
-      "tslint --fix",
+      "eslint --fix",
       "git add"
     ]
   },
   "husky": {
     "hooks": {
-        "pre-commit": [ "lint-staged" ]
+      "pre-commit": [
+        "lint-staged"
+      ]
     }
   },
   "repository": {
@@ -31,7 +33,7 @@
     "url": "git+https://github.com/foundersclubsoftware/danger-dependencies.git"
   },
   "author": "thrymgjol",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "engines": {
     "node": ">=10.0.0"
   },
@@ -41,13 +43,14 @@
   "homepage": "https://github.com/foundersclubsoftware/danger-dependencies#readme",
   "devDependencies": {
     "@types/node": "^12.7.8",
+    "@typescript-eslint/eslint-plugin": "^2.3.2",
+    "@typescript-eslint/parser": "^2.3.2",
     "danger": "^9.2.1",
+    "eslint": "^6.5.0",
     "husky": "^3.0.5",
     "lint-staged": "^9.4.0",
     "prettier": "^1.18.2",
     "typescript": "^3.6.3"
   },
-  "dependencies": {
-      "danger": "*"
-  }
+  "dependencies": {}
 }

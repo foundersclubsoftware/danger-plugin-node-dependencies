@@ -1,7 +1,7 @@
 import { DangerDSLType } from "../node_modules/danger/distribution/dsl/DangerDSL"
 import { TextDiff } from "../node_modules/danger/distribution/dsl/GitDSL"
 
-declare var danger: DangerDSLType
+declare const danger: DangerDSLType
 
 export declare function warn(message: string): void
 export declare function fail(message: string): void
@@ -43,11 +43,11 @@ function getAddedPackages(diff: TextDiff | null): AddedPackages | undefined {
     devDependencies: getPackageAdditions(
       before.devDependencies,
       after.devDependencies
-    )
+    ),
   }
 }
 
-function makePackageList(packages: string[]) {
+function makePackageList(packages: string[]): string {
   return packages.reduce((list, dep) => `${list}\n + ${dep}`, "")
 }
 
@@ -87,26 +87,26 @@ async function notifyAddedPackages(
   }
 }
 
-export function warnAddedDependencies() {
+export function warnAddedDependencies(): void {
   notifyAddedPackages(warn, { dependencies: true })
 }
 
-export function failAddedDependencies() {
+export function failAddedDependencies(): void {
   notifyAddedPackages(fail, { dependencies: true })
 }
 
-export function warnAddedDevDependencies() {
+export function warnAddedDevDependencies(): void {
   notifyAddedPackages(warn, { devDependencies: true })
 }
 
-export function failAddedDevDependencies() {
+export function failAddedDevDependencies(): void {
   notifyAddedPackages(fail, { devDependencies: true })
 }
 
-export function warnAllDependencies() {
+export function warnAllDependencies(): void {
   notifyAddedPackages(warn, { dependencies: true, devDependencies: true })
 }
 
-export function failAllDependencies() {
+export function failAllDependencies(): void {
   notifyAddedPackages(fail, { dependencies: true, devDependencies: true })
 }
