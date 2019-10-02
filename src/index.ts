@@ -20,8 +20,15 @@ interface AddedPackages {
   devDependencies: string[]
 }
 
-const addedDependenciesMessage = "Added dependencies"
-const addedDevDependenciesMessage = "Added dev dependencies"
+interface NotifyOptions {
+  dependencies?: boolean
+  devDependencies?: boolean
+}
+
+const PACKAGEPHOBIA_BASE_URI = "https://packagephobia.now.sh/"
+
+const addedDependenciesMessage = "##### Added dependencies"
+const addedDevDependenciesMessage = "##### Added dev dependencies"
 
 function getPackageAdditions(before: PackageMap, after: PackageMap): string[] {
   const beforePackages = Object.keys(before)
@@ -47,16 +54,20 @@ function getAddedPackages(diff: TextDiff | null): AddedPackages | undefined {
   }
 }
 
+function makeListItem(pkg: string): string {
+  return (
+    ` * ${pkg} [![install size](${PACKAGEPHOBIA_BASE_URI}badge?p=${pkg})]` +
+    `(${PACKAGEPHOBIA_BASE_URI}result?p=${pkg})`
+  )
+}
+
 function makePackageList(packages: string[]): string {
-  return packages.reduce((list, dep) => `${list}\n + ${dep}`, "")
+  return packages.reduce((list, dep) => list + "\n" + makeListItem(dep), "")
 }
 
 async function notifyAddedPackages(
   notify: (msg: string) => void,
-  types: {
-    dependencies?: boolean
-    devDependencies?: boolean
-  }
+  options?: NotifyOptions
 ): Promise<void> {
   if (!danger.git.modified_files.includes("package.json")) {
     return
@@ -70,7 +81,7 @@ async function notifyAddedPackages(
     return
   }
 
-  if (types.dependencies && addedPackages.dependencies.length) {
+  if ((!options || options.dependencies) && addedPackages.dependencies.length) {
     notify(
       addedDependenciesMessage +
         ":" +
@@ -78,7 +89,10 @@ async function notifyAddedPackages(
     )
   }
 
-  if (types.devDependencies && addedPackages.devDependencies.length) {
+  if (
+    (!options || options.devDependencies) &&
+    addedPackages.devDependencies.length
+  ) {
     notify(
       addedDevDependenciesMessage +
         ":" +
@@ -87,26 +101,10 @@ async function notifyAddedPackages(
   }
 }
 
-export function warnAddedDependencies(): void {
-  notifyAddedPackages(warn, { dependencies: true })
+export async function warnDependencies(options?: NotifyOptions): Promise<void> {
+  await notifyAddedPackages(warn, options)
 }
 
-export function failAddedDependencies(): void {
-  notifyAddedPackages(fail, { dependencies: true })
-}
-
-export function warnAddedDevDependencies(): void {
-  notifyAddedPackages(warn, { devDependencies: true })
-}
-
-export function failAddedDevDependencies(): void {
-  notifyAddedPackages(fail, { devDependencies: true })
-}
-
-export function warnAllDependencies(): void {
-  notifyAddedPackages(warn, { dependencies: true, devDependencies: true })
-}
-
-export function failAllDependencies(): void {
-  notifyAddedPackages(fail, { dependencies: true, devDependencies: true })
+export async function failDependencies(options?: NotifyOptions): Promise<void> {
+  await notifyAddedPackages(fail, options)
 }
