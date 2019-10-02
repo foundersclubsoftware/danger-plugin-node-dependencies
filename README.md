@@ -12,7 +12,7 @@ npm install --save-dev <TBD>
 ```
 
 #### At a glance
-```
+```ts
 // dangerfile.ts
 import { warnDependencies, failDependencies } from 'danger-dependencies'
 
@@ -45,7 +45,7 @@ failDependencies({ dependencies: true })
 The functions produce identical messages notifying you of dependencies added to `package.json`, but the former produces only warning messages, while the latter causes Danger to fail when added dependencies are found.
 
 The options are passed in the form
-```
+```ts
 {
     dependencies: boolean,
     devDependencies: boolean
