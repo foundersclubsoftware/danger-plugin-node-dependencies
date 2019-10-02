@@ -54,6 +54,6 @@ The options are passed in the form
 If a key is omitted, it defaults to `false`. Passing no options will result in notification of all new dependencies.
 
 ## Credits
-This project was created by [Levi Bostian](https://curiosityio.com/) and [Oliver Emery](https://curiosityio.com/).
+This project was created by [Levi Bostian](https://curiosityio.com/) and [Oliver Emery](https://github.com/thrymgjol).
 
 Dependency size badges in ouput messages are provided by [Package Phobia](https://packagephobia.now.sh/).
