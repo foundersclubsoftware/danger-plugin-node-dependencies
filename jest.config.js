@@ -3,7 +3,10 @@ module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
     transform: { "^.+\\.ts$": "ts-jest", },
-    transformIgnorePatterns: ["/node_modules/"],
+    transformIgnorePatterns: [
+        "\\.snap$",
+        "/node_modules/"
+    ],
     resetMocks: true,
     roots: ["src/"]
 }

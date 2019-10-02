@@ -10,6 +10,7 @@ declare const global: any
 
 function mockPackageDiff(before: PackageList, after: PackageList): void {
   // converts a list to an object in which the keys are the list items
+  // i.e. [ 'pkgA', 'pkgB' ] -> { pkgA: 0, pkgB: 0 }
   const convert = (a: string[]): any =>
     a.reduce((o, k) => ({ ...o, [k]: 0 }), {})
 
@@ -38,34 +39,36 @@ beforeEach(() => {
 
 describe("Dependencies", () => {
   it("should detect all added dependencies", async () => {
-    mockPackageDiff(
-      {
-        dependencies: ["pkg1"],
-        devDependencies: ["pkgA"],
-      },
-      {
-        dependencies: ["pkg1", "pkg2", "pkg3"],
-        devDependencies: ["pkgB"],
-      }
-    )
+    const before = {
+      dependencies: ["pkg1"],
+      devDependencies: ["pkgA"],
+    }
+    const after = {
+      dependencies: ["pkg1", "pkg2", "pkg3"],
+      devDependencies: ["pkgB"],
+    }
+    mockPackageDiff(before, after)
 
     await warnDependencies()
-    expect(global.warn).toHaveBeenCalledWith(expect.stringContaining("pkg2"))
-    expect(global.warn).toHaveBeenCalledWith(expect.stringContaining("pkg3"))
-    expect(global.warn).toHaveBeenCalledWith(expect.stringContaining("pkgB"))
+    expect(global.warn).toHaveBeenCalledTimes(2)
+
+    const dependenciesMessage = global.warn.mock.calls[0][0]
+    const devDependenciesMessage = global.warn.mock.calls[1][0]
+
+    expect(dependenciesMessage).toMatchSnapshot()
+    expect(devDependenciesMessage).toMatchSnapshot()
   })
 
   it("shouldn't detect removed dependencies", async () => {
-    mockPackageDiff(
-      {
-        dependencies: ["pkg1"],
-        devDependencies: ["pkgA", "pkgB"],
-      },
-      {
-        dependencies: [],
-        devDependencies: [],
-      }
-    )
+    const before = {
+      dependencies: ["pkg1"],
+      devDependencies: ["pkgA", "pkgB"],
+    }
+    const after = {
+      dependencies: [],
+      devDependencies: [],
+    }
+    mockPackageDiff(before, after)
 
     await warnDependencies()
     expect(global.warn).not.toHaveBeenCalled()
@@ -74,48 +77,38 @@ describe("Dependencies", () => {
 
 describe("Options", () => {
   it("should detect only dependencies when specified", async () => {
-    mockPackageDiff(
-      {
-        dependencies: ["pkg1"],
-        devDependencies: ["pkgA"],
-      },
-      {
-        dependencies: ["pkg1", "pkg2", "pkg3"],
-        devDependencies: ["pkgB", "pkgC"],
-      }
-    )
+    const before = {
+      dependencies: ["pkg1"],
+      devDependencies: ["pkgA"],
+    }
+    const after = {
+      dependencies: ["pkg1", "pkg2", "pkg3"],
+      devDependencies: ["pkgB", "pkgC"],
+    }
+    mockPackageDiff(before, after)
 
     await failDependencies({ dependencies: true })
-    expect(global.fail).toHaveBeenCalledWith(expect.stringContaining("pkg2"))
-    expect(global.fail).toHaveBeenCalledWith(expect.stringContaining("pkg3"))
-    expect(global.fail).not.toHaveBeenCalledWith(
-      expect.stringContaining("pkgB")
-    )
-    expect(global.fail).not.toHaveBeenCalledWith(
-      expect.stringContaining("pkgC")
-    )
+    expect(global.fail).toHaveBeenCalledTimes(1)
+
+    const dependenciesMessage = global.fail.mock.calls[0][0]
+    expect(dependenciesMessage).toMatchSnapshot()
   })
 
   it("should detect only dev dependencies when specified", async () => {
-    mockPackageDiff(
-      {
-        dependencies: ["pkg1"],
-        devDependencies: ["pkgA"],
-      },
-      {
-        dependencies: ["pkg1", "pkg2", "pkg3"],
-        devDependencies: ["pkgB", "pkgC"],
-      }
-    )
+    const before = {
+      dependencies: ["pkg1"],
+      devDependencies: ["pkgA"],
+    }
+    const after = {
+      dependencies: ["pkg1", "pkg2", "pkg3"],
+      devDependencies: ["pkgB", "pkgC"],
+    }
+    mockPackageDiff(before, after)
 
     await failDependencies({ devDependencies: true })
-    expect(global.fail).not.toHaveBeenCalledWith(
-      expect.stringContaining("pkg2")
-    )
-    expect(global.fail).not.toHaveBeenCalledWith(
-      expect.stringContaining("pkg3")
-    )
-    expect(global.fail).toHaveBeenCalledWith(expect.stringContaining("pkgB"))
-    expect(global.fail).toHaveBeenCalledWith(expect.stringContaining("pkgC"))
+    expect(global.fail).toHaveBeenCalledTimes(1)
+
+    const devDependenciesMessage = global.fail.mock.calls[0][0]
+    expect(devDependenciesMessage).toMatchSnapshot()
   })
 })
