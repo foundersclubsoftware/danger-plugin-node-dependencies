@@ -12,6 +12,8 @@
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint --fix src/**/*.ts",
+    "prepublishOnly": "rm -rf dist && npm ci && npm run lint && npm test && npm run build",
     "test": "jest"
   },
   "lint-staged": {
