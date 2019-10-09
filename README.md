@@ -1,4 +1,4 @@
-# danger-dependencies
+# danger-plugin-node-dependencies
 
 > Keep dependencies as low as possible.
 
@@ -8,13 +8,13 @@ Warns or fails on new dependencies in `package.json`.
 
 #### Install
 ```
-npm install --save-dev <TBD>
+npm install --save-dev danger-plugin-node-dependencies
 ```
 
 #### At a glance
 ```ts
 // dangerfile.ts
-import { warnDependencies, failDependencies } from 'danger-dependencies'
+import { warnDependencies, failDependencies } from 'danger-plugin-node-dependencies'
 
 // Warn of all dependencies added since the last commit
 warnDependencies()
@@ -38,7 +38,7 @@ failDependencies({ dependencies: true })
 
 ## API
 
-`danger-dependencies` exports two functions:
+`danger-plugin-node-dependencies` exports two functions:
 * `warnDependencies(options)`
 * `failDependencies(options)`
 

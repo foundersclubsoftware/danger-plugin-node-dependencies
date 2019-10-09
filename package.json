@@ -1,6 +1,6 @@
 {
-  "name": "danger-dependencies",
-  "version": "0.0.1",
+  "name": "danger-plugin-node-dependencies",
+  "version": "0.0.2",
   "description": "Keep dependencies as low as possible.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
