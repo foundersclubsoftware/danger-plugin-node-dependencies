@@ -1,0 +1,70 @@
+{
+  "name": "danger-plugin-node-dependencies",
+  "version": "0.0.0-development",
+  "description": "Keep dependencies as low as possible.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "danger",
+    "danger-plugin",
+    "dependencies"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint --fix src/**/*.ts",
+    "prepublishOnly": "rm -rf dist && npm ci && npm run lint && npm test && npm run build && mv .gitignore .gitignore-tmp",
+    "postpublish": "mv .gitignore-tmp .gitignore",
+    "test": "jest",
+    "semantic-release": "semantic-release"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run format",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": [
+        "lint-staged"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foundersclubsoftware/danger-dependencies.git"
+  },
+  "author": "thrymgjol",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/foundersclubsoftware/danger-dependencies/issues"
+  },
+  "homepage": "https://github.com/foundersclubsoftware/danger-dependencies#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.8",
+    "@typescript-eslint/eslint-plugin": "^2.3.2",
+    "@typescript-eslint/parser": "^2.3.2",
+    "cz-conventional-changelog": "^3.0.2",
+    "danger": "^9.2.1",
+    "eslint": "^6.5.0",
+    "eslint-plugin-jest": "^22.17.0",
+    "husky": "^3.0.5",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.4.0",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {},
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

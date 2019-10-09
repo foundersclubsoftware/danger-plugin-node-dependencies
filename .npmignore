@@ -1,0 +1,7 @@
+.eslintrc.json
+.prettierrc.json
+.travis.yml
+jest.config.js
+tsconfig.json
+src/index.test.ts
+src/__snapshots__/index.test.ts.snap

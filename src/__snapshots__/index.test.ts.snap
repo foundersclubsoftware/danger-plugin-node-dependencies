@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dependencies should detect all added dependencies 1`] = `
+"##### Added dependencies:
+ * pkg2 [![install size](https://packagephobia.now.sh/badge?p=pkg2)](https://packagephobia.now.sh/result?p=pkg2)
+ * pkg3 [![install size](https://packagephobia.now.sh/badge?p=pkg3)](https://packagephobia.now.sh/result?p=pkg3)"
+`;
+
+exports[`Dependencies should detect all added dependencies 2`] = `
+"##### Added dev dependencies:
+ * pkgB [![install size](https://packagephobia.now.sh/badge?p=pkgB)](https://packagephobia.now.sh/result?p=pkgB)"
+`;
+
+exports[`Options should detect only dependencies when specified 1`] = `
+"##### Added dependencies:
+ * pkg2 [![install size](https://packagephobia.now.sh/badge?p=pkg2)](https://packagephobia.now.sh/result?p=pkg2)
+ * pkg3 [![install size](https://packagephobia.now.sh/badge?p=pkg3)](https://packagephobia.now.sh/result?p=pkg3)"
+`;
+
+exports[`Options should detect only dev dependencies when specified 1`] = `
+"##### Added dev dependencies:
+ * pkgB [![install size](https://packagephobia.now.sh/badge?p=pkgB)](https://packagephobia.now.sh/result?p=pkgB)
+ * pkgC [![install size](https://packagephobia.now.sh/badge?p=pkgC)](https://packagephobia.now.sh/result?p=pkgC)"
+`;
