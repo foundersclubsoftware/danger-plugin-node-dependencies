@@ -1,6 +1,6 @@
 {
   "name": "danger-plugin-node-dependencies",
-  "version": "0.0.2",
+  "version": "0.0.0-development",
   "description": "Keep dependencies as low as possible.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,8 +13,10 @@
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint --fix src/**/*.ts",
-    "prepublishOnly": "rm -rf dist && npm ci && npm run lint && npm test && npm run build",
-    "test": "jest"
+    "prepublishOnly": "rm -rf dist && npm ci && npm run lint && npm test && npm run build && mv .gitignore .gitignore-tmp",
+    "postpublish": "mv .gitignore-tmp .gitignore",
+    "test": "jest",
+    "semantic-release": "semantic-release"
   },
   "lint-staged": {
     "*.ts": [
@@ -32,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/foundersclubsoftware/danger-dependencies.git"
+    "url": "https://github.com/foundersclubsoftware/danger-dependencies.git"
   },
   "author": "thrymgjol",
   "license": "MIT",
